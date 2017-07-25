@@ -1,9 +1,10 @@
 <?php
 
-namespace backend\models;
+namespace app\models;
 
-use Yii;
+use backend\models\GoodsCategoryQuery;
 use creocoder\nestedsets\NestedSetsBehavior;
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -34,6 +35,7 @@ class GoodsCategory extends ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'parent_id'], 'required'],
             [['tree', 'lft', 'rgt', 'depth', 'parent_id'], 'integer'],
             [['intro'], 'string'],
             [['name'], 'string', 'max' => 50],
@@ -47,24 +49,24 @@ class GoodsCategory extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'tree' => '树id',
-            'lft' => '左值',
-            'rgt' => '右值',
-            'depth' => '层级',
-            'name' => '名称',
-            'parent_id' => '上级分类id',
-            'intro' => '简介',
+            'tree' => 'Tree',
+            'lft' => 'Lft',
+            'rgt' => 'Rgt',
+            'depth' => 'Depth',
+            'name' => '分类名称',
+            'parent_id' => '上级分类',
+            'intro' => '分类简介',
         ];
     }
-        //嵌套集合行为
+
     public function behaviors() {
         return [
             'tree' => [
                 'class' => NestedSetsBehavior::className(),
-                 'treeAttribute' => 'tree',
-                 'leftAttribute' => 'lft',
-                 'rightAttribute' => 'rgt',
-                 'depthAttribute' => 'depth',
+                'treeAttribute' => 'tree',
+                'leftAttribute' => 'lft',
+                'rightAttribute' => 'rgt',
+                'depthAttribute' => 'depth',
             ],
         ];
     }
@@ -78,6 +80,10 @@ class GoodsCategory extends ActiveRecord
 
     public static function find()
     {
-        return new GoodsCategoryQuqey(get_called_class());
+        return new GoodsCategoryQuery(get_called_class());
     }
+
+
+
+
 }
