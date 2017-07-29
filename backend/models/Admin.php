@@ -25,7 +25,11 @@ use yii\web\IdentityInterface;
 class Admin extends \yii\db\ActiveRecord implements IdentityInterface
 {
 
-    public static $status_opt=['1'=>'正常','0'=>'回收站'];
+    public $password;
+    public $roles =[];
+
+    public static $status_opt = [10 => '正常', 0 => '禁用'];
+
     /**
      * @inheritdoc
      */
@@ -40,13 +44,16 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username',  'password_hash','email','status'], 'required'],
+            [['username', 'password', 'email'], 'required'],
             [['status', 'created_at', 'updated_at', 'last_login_time'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'last_login_ip'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
+            //验证邮箱格式
+            ['email', 'email'],
+            ['roles','safe'],
         ];
     }
 
@@ -67,21 +74,37 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
             'updated_at' => 'Updated At',
             'last_login_time' => '最后登录时间',
             'last_login_ip' => '最后登录时间 Ip',
+            'password'=>'密码',
         ];
     }
-    public function behaviors()
+    public function beforeSave($insert)
     {
-        return [
-            'time' => [
-//                'class' => TimestampBehavior::className(),
-                'class' => TimestampBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at','updated_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at'
-                ],
-            ]
-        ];
+        if ($insert) {
+            $this->status = 10;
+            $this->created_at = time();
+        } else {
+            $this->updated_at = time();
+        }
+        if ($this->password_hash) {
+            $this->password_hash = \Yii::$app->security->generatePasswordHash($this->password);
+        }
+
+        return parent::beforeSave($insert);
     }
+
+//    public function behaviors()
+//    {
+//        return [
+//            'time' => [
+////                'class' => TimestampBehavior::className(),
+//                'class' => TimestampBehavior::className(),
+//                'attributes' => [
+//                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+//                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at'
+//                ],
+//            ]
+//        ];
+//    }
 
     /**
      * Finds an identity by the given ID.
@@ -92,7 +115,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return self::findOne(['id'=>$id]);
+        return self::findOne(['id' => $id]);
     }
 
     /**
@@ -147,4 +170,6 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return $this->getAuthKey() === $authKey;
     }
+
+
 }

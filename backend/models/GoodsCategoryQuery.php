@@ -1,9 +1,7 @@
 <?php
 namespace backend\models;
 use creocoder\nestedsets\NestedSetsQueryBehavior;
-use yii\db\ActiveQuery;
-
-class GoodsCategoryQuery extends ActiveQuery{
+class GoodsCategoryQuery extends \yii\db\ActiveQuery{
     public function behaviors() {
         return [
             NestedSetsQueryBehavior::className(),

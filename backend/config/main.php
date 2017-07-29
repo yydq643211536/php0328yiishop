@@ -19,6 +19,7 @@ return [
         ],
         'user' => [
 //            'identityClass' => 'common\models\User',
+            'loginUrl' => ['admin/login'],
             'identityClass' => \backend\models\Admin::className(),
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
