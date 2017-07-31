@@ -65,10 +65,10 @@ class GoodsCategory extends ActiveRecord
         return [
             'tree' => [
                 'class' => NestedSetsBehavior::className(),
-                 'treeAttribute' => 'tree',
-                 'leftAttribute' => 'lft',
-                 'rightAttribute' => 'rgt',
-                 'depthAttribute' => 'depth',
+                'treeAttribute' => 'tree',
+                'leftAttribute' => 'lft',
+                'rightAttribute' => 'rgt',
+                'depthAttribute' => 'depth',
             ],
         ];
     }
