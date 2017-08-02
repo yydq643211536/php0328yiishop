@@ -25,7 +25,7 @@ class LoginForm extends Model
     {
         return [
             [['username','password'],'required'],
-             ['safe_login','boolean'],
+            ['safe_login','boolean'],
             ['username','validateName'],
             ['password','validatePassword']
         ];
@@ -35,7 +35,7 @@ class LoginForm extends Model
         $member = Member::findOne(['username' => $this->username]);
         if (!$member)         //验证用户是否存在
         {
-          return $this->addError('username','用户不存在');
+            return $this->addError('username','用户不存在');
         }
     }
     public function validatePassword()

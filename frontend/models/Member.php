@@ -28,6 +28,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     public $code;//验证码
     public $pwd;
     public $repwd;
+    public $tel_code;
     public static function tableName()
     {
         return 'member';
@@ -39,7 +40,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['tel', 'last_login_time', 'last_login_ip', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['tel', 'last_login_time', 'last_login_ip', 'status', 'created_at','tel_code', 'updated_at'], 'integer'],
             [['username'], 'string', 'max' => 50],
             [['auth_key'], 'string', 'max' => 32],
             [['password_hash'], 'string', 'max' => 255],

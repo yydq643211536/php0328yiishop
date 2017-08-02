@@ -1,13 +1,13 @@
 <?php
 
 namespace backend\controllers;
-use app\models\GoodsCategory;
-use app\models\GoodsGallery;
+use backend\models\GoodsCategory;
+use backend\models\GoodsGallery;
 use backend\models\GoodsForm;
 use flyok666\uploadifive\UploadAction;
-use app\models\Goods;
-use app\models\GoodsDayCount;
-use app\models\GoodsIntro;
+use backend\models\Goods;
+use backend\models\GoodsDayCount;
+use backend\models\GoodsIntro;
 use yii\data\Pagination;
 use yii\web\Request;
 
@@ -62,6 +62,7 @@ class GoodsController extends \yii\web\Controller
             $goodsdaycount->count++;
             //根据时间生成商品货号
             $model->sn=$nowtime.substr(strval($goodsdaycount->count+10000),1,4);
+//            var_dump($model->logo);exit;
             $model->status=1;
             $model->save();//保存商品信息
             $goodsdaycount->save();//保存每日每次添加商品数量
@@ -70,7 +71,7 @@ class GoodsController extends \yii\web\Controller
             \yii::$app->session->setFlash('success','添加成功');
             return $this->redirect(['index']);
         }
-        $categorys=GoodsCategory::find()->select(['id','name','parent_id'])->asArray()->all();
+        $categorys=\backend\models\GoodsCategory::find()->select(['id','name','parent_id'])->asArray()->all();
         //调用视图显示添加页面
         return $this->render('add',['model'=>$model,'goodsintro'=>$goodsintro,'categorys'=>$categorys]);
     }
@@ -91,7 +92,7 @@ class GoodsController extends \yii\web\Controller
             \yii::$app->session->setFlash('success','修改成功');
             return $this->redirect(['index']);
         }
-        $categorys=GoodsCategory::find()->select(['id','name','parent_id'])->asArray()->all();
+        $categorys=\backend\models\GoodsCategory::find()->select(['id','name','parent_id'])->asArray()->all();
         //调用视图显示添加页面
         return $this->render('add',['model'=>$model,'goodsintro'=>$goodsintro,'categorys'=>$categorys]);
     }

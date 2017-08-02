@@ -34,7 +34,7 @@ class MenuController extends \yii\web\Controller
             }else{
                 $model->save();
             }
-            \Yii::$app->session->setFlash('success','菜单添加成功');
+            \Yii::$app->session->setFlash('success','菜单修改成功');
             return $this->redirect(['index']);
         }
         return $this->render('add',['model'=>$model]);

@@ -101,4 +101,11 @@ class GoodsCategory extends ActiveRecord
         return isset($infos[$msg])?$infos[$msg]:$msg;
     }
 
+    public function getChildren(){
+        return $this->hasMany(GoodsCategory::className(),['parent_id'=>'id']);
+    }
+    public function getChild(){
+        return $this->hasMany(GoodsCategory::className(),['parent_id'=>'id']);
+    }
+
 }

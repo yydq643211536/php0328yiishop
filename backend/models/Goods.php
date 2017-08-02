@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use backend\models\Brand;
+use backend\models\GoodsCategory;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

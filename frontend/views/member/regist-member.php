@@ -77,12 +77,12 @@
                     <p></p>
                 </li>
                 <li id="li_code">
-                    <label for="">验证码：</label>
+                    <label for="">手机验证码：</label>
                     <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Member[code]" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
                     <p></p>
                 </li>
                 <li class="checkcode" id="li_code">
-                    <?=$form->field($model,'code')->widget(\yii\captcha\Captcha::className())?>
+                    <?=$form->field($model,'code')->widget(\yii\captcha\Captcha::className(),['captchaAction'=>'member/captcha'])?>
                     <p></p>
                 </li>
                 <li>
@@ -209,6 +209,21 @@
             $("#member-code-image").attr('src',json.url);
             //console.log(json.url);
         });
+    });
+
+    //获取手机验证码
+    $("#get_captcha").click(function () {
+//        console.debug(1);
+        //电话正则表达式
+        var myreg = /^1[34578]\d{9}$/;
+        var  telphone  =   myreg.test($('#li_tel input').val())
+        console.debug(telphone);
+        if(telphone){
+            $.get('/member/sms',{'tel':$('#li_tel input').val()})
+        }else {
+            $('#li_tel p').text('请输入正确是手机号码')
+            return false;
+        }
     });
 </script>
 </body>

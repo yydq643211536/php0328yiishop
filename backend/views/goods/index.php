@@ -38,13 +38,13 @@
             <td><?=$good->id?></td>
             <td><?=$good->name?></td>
             <td><?=$good->sn?></td>
-            <td><?=$good->goodsCategory->name?></td>
+            <td><?=$good->name?></td>
             <td><?=$good->brand->name?></td>
             <td><?=$good->market_price?></td>
             <td><?=$good->shop_price?></td>
             <td><?=$good->stock?></td>
-            <td><?=\app\models\Goods::$sale_opt[$good->is_on_sale]?></td>
-            <td><?=\app\models\Goods::$status_opt[$good->status]?></td>
+            <td><?=\backend\models\Goods::$sale_opt[$good->is_on_sale]?></td>
+            <td><?=\backend\models\Goods::$status_opt[$good->status]?></td>
             <td><?=$good->sort?></td>
             <td><?=date('Y-m-d',$good->create_time)?></td>
             <td><?=$good->view_times?></td>

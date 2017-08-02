@@ -18,13 +18,20 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' =>\frontend\models\Member::className(),
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
+        ],
+        'sms'=> [
+            'class' => \frontend\components\AliyunSms::className(),
+            'accessKeyId' => 'LTAICuUtANODiHze',
+            'accessKeySecret' => '2kjoxKnLnGHTl0OXt5ltJ1XPK4btot',
+            'signName' => '肖先生茶馆',
+            'templateCode' => 'SMS_80045057',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

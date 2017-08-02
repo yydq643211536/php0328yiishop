@@ -46,11 +46,11 @@ echo $form->field($model,'goods_category_id')->hiddenInput();
 echo '<div>
     <ul id="treeDemo" class="ztree"></ul>
 </div>';
-echo $form->field($model,'brand_id')->dropDownList(\app\models\Goods::getBrands());
+echo $form->field($model,'brand_id')->dropDownList(\backend\models\Goods::getBrands());
 echo $form->field($model,'market_price');
 echo $form->field($model,'shop_price');
 echo $form->field($model,'stock');
-echo $form->field($model,'is_on_sale',['inline'=>1])->radioList(\app\models\Goods::$sale_opt);
+echo $form->field($model,'is_on_sale',['inline'=>1])->radioList(\backend\models\Goods::$sale_opt);
 echo $form->field($model,'sort')->textInput(['type'=>'number']);
 echo $form->field($goodsintro,'content')->widget('kucha\ueditor\UEditor',[]);
 echo \yii\bootstrap\Html::submitButton('提交',['class'=>'btn btn-primary']);
