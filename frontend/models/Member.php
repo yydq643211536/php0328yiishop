@@ -13,7 +13,7 @@ use yii\web\IdentityInterface;
  * @property string $auth_key
  * @property string $password_hash
  * @property string $email
- * @property integer $tel
+ * @property string $tel
  * @property integer $last_login_time
  * @property integer $last_login_ip
  * @property integer $status
@@ -22,13 +22,12 @@ use yii\web\IdentityInterface;
  */
 class Member extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    public $password;
+    public $repassword;
+    public $code;//验证码
     /**
      * @inheritdoc
      */
-    public $code;//验证码
-    public $pwd;
-    public $repwd;
-    public $tel_code;
     public static function tableName()
     {
         return 'member';
@@ -40,16 +39,16 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['tel', 'last_login_time', 'last_login_ip', 'status', 'created_at','tel_code', 'updated_at'], 'integer'],
+            [['username','password','email','repassword','tel'],'required','message'=>'{attribute}不能为空'],
+            [['username','email'],'unique'],
+            [['last_login_time', 'last_login_ip', 'status', 'created_at', 'update_at'], 'integer'],
             [['username'], 'string', 'max' => 50],
             [['auth_key'], 'string', 'max' => 32],
-            [['password_hash'], 'string', 'max' => 255],
-            [['email'], 'string', 'max' => 100],
+            [['password_hash', 'email'], 'string', 'max' => 100],
+            [['tel'], 'string', 'max' => 11],
+            ['repassword','compare','compareAttribute'=>'password','message'=>'两次密码必须一致'],
             ['email','email'],
-            [['pwd','repwd'],'required'],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            ['repwd','compare','compareAttribute'=>'pwd'],
+            ['code','captcha','captchaAction'=>'member/captcha'],
         ];
     }
 
@@ -61,19 +60,36 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             'id' => 'ID',
             'username' => '用户名',
-            'auth_key' => 'AUTH_KEY',
-            'password_hash' => '密码',
+            'auth_key' => 'Auth Key',
+            'password_hash' => '密文密码',
             'email' => '邮箱',
             'tel' => '电话',
             'last_login_time' => '最后登录时间',
             'last_login_ip' => '最后登录ip',
-            'status' => '状态',
+            'status' => '状态（1正常，0删除）',
             'created_at' => '添加时间',
-            'updated_at' => '修改时间',
-            'pwd' => '密码',
-            'repwd' => '确认密码',
-            'code' => '验证码',
+            'updated_at' => '更新时间',
+            'password'=>'密码',
+            'repassword'=>'确认密码',
+            'code'=>'验证码',
         ];
+    }
+
+    //在save之前处理数据
+    public function beforeSave($insert)
+    {
+        if($insert) {
+            $this->status = 1;
+            //添加时间
+            $this->created_at = time();
+            $this->auth_key = \Yii::$app->security->generateRandomString();
+//        }}
+        }
+        //验证通过
+        if($this->password){//加密密码
+            $this->password_hash=\Yii::$app->security->generatePasswordHash($this->password);
+        }
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -85,8 +101,8 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        // TODO: Implement findIdentity() method.
         return self::findOne(['id'=>$id]);
+        // TODO: Implement findIdentity() method.
     }
 
     /**
@@ -100,6 +116,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
+        return self::find()->where(['auth_key'=>$token])->one();
         // TODO: Implement findIdentityByAccessToken() method.
     }
 
@@ -109,8 +126,8 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        // TODO: Implement getId() method.
         return $this->id;
+        // TODO: Implement getId() method.
     }
 
     /**
@@ -127,8 +144,8 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
         return $this->auth_key;
+        // TODO: Implement getAuthKey() method.
     }
 
     /**
@@ -141,7 +158,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
+        return $this->getAuthKey()==$authKey;
         // TODO: Implement validateAuthKey() method.
-        return $this->getAuthKey() === $authKey;
     }
 }

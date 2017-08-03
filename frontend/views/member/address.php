@@ -3,17 +3,18 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>收货地址</title>
-    <link rel="stylesheet" href="/style/base.css" type="text/css">
-    <link rel="stylesheet" href="/style/global.css" type="text/css">
-    <link rel="stylesheet" href="/style/header.css" type="text/css">
-    <link rel="stylesheet" href="/style/home.css" type="text/css">
-    <link rel="stylesheet" href="/style/address.css" type="text/css">
-    <link rel="stylesheet" href="/style/bottomnav.css" type="text/css">
-    <link rel="stylesheet" href="/style/footer.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/base.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/global.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/header.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/home.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/address.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/bottomnav.css" type="text/css">
+    <link rel="stylesheet" href="<?=\Yii::getAlias('@web')?>/style/footer.css" type="text/css">
 
-    <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="/js/header.js"></script>
-    <script type="text/javascript" src="/js/home.js"></script>
+    <script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/header.js"></script>
+    <script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/home.js"></script>
+    <script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/address.js"></script>
 </head>
 <body>
 <!-- 顶部导航 start -->
@@ -24,7 +25,12 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好，欢迎来到京西！ <?php if(Yii::$app->user->isGuest):?>
+                        [<?=\yii\helpers\Html::a('登录',['member/login'])?>]
+                        [<?=\yii\helpers\Html::a('免费注册',['user/logout'])?>]
+                    <?php else:?>
+                        [<?=\yii\helpers\Html::a('注销',['member/logout'])?>]
+                    <?php endif;?></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -42,7 +48,7 @@
 <div class="header w1210 bc mt15">
     <!-- 头部上半部分 start 包括 logo、搜索、用户中心和购物车结算 -->
     <div class="logo w1210">
-        <h1 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h1>
+        <h1 class="fl"><a href="index.html"><img src="<?=\Yii::getAlias('@web')?>/images/logo.png" alt="京西商城"></a></h1>
         <!-- 头部搜索 start -->
         <div class="search fl">
             <div class="search_form">
@@ -97,9 +103,9 @@
                     <div class="viewlist mt10">
                         <h3>最近浏览的商品：</h3>
                         <ul>
-                            <li><a href=""><img src="/images/view_list1.jpg" alt="" /></a></li>
-                            <li><a href=""><img src="/images/view_list2.jpg" alt="" /></a></li>
-                            <li><a href=""><img src="/images/view_list3.jpg" alt="" /></a></li>
+                            <li><a href=""><img src="<?=\Yii::getAlias('@web')?>/images/view_list1.jpg" alt="" /></a></li>
+                            <li><a href=""><img src="<?=\Yii::getAlias('@web')?>/images/view_list2.jpg" alt="" /></a></li>
+                            <li><a href=""><img src="<?=\Yii::getAlias('@web')?>/images/view_list3.jpg" alt="" /></a></li>
                         </ul>
                     </div>
                 </dd>
@@ -356,7 +362,6 @@
 
                     </div>
                 </div>
-
                 <div class="cat">
                     <h3><a href="">礼品箱包、钟表、珠宝</a><b></b></h3>
                     <div class="cat_detail none">
@@ -464,64 +469,62 @@
     <div class="content fl ml10">
         <div class="address_hd">
             <h3>收货地址薄</h3>
-            <?php foreach ($address as $addre): ?>
-            <dl>
-                <dt>
-                <?=$addre->name?>
-                </dt>
-                <dd>
-                    <?=\yii\bootstrap\Html::a('修改',['member/edit','id'=>$addre->id],['id'=>'edit'])?>
-                    <?=\yii\bootstrap\Html::a('删除',['member/del','id'=>$addre->id])?>
-                    <?=\yii\bootstrap\Html::a('设为默认地址',['member/status','id'=>$addre->id])?>
-                </dd>
-            </dl>
-            <?php endforeach; ?>
+            <?php foreach($address as $addres):?>
+                <dl>
+                    <dt>1.<?=$addres->name?> <?=$addres->province?> <?=$addres->city?><?=$addres->area?><?=$addres->detail?> <?=$addres->tel?> </dt>
+                    <dd>
+                        <a href="/member/edit-address?id=<?=$addres->id?>">修改</a>
+                        <a href="/member/del-address?id=<?=$addres->id?>">删除</a>
+                        <a href="/member/chg-status?id=<?=$addres->id?>">设为默认地址</a>
+                    </dd>
+                </dl>
+            <?php endforeach;?>
         </div>
 
         <div class="address_bd mt10">
-            <h4>修改收货地址</h4>
-            <?php \yii\widgets\ActiveForm::begin(['id'=>'address_form']) ?>
-                <ul>
-                    <li id="name">
-                        <label for=""><span>*</span>收 货 人：</label>
-                        <input type="text" name="Address[name]" class="txt" value="<?=$model->name?>" />
-                        <p></p>
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>所在地区：</label>
-                        <select name="Address[province]" id="province">
-                            <option value="">==请选择省==</option>
-                        </select>
+            <h4>新增收货地址</h4>
+            <!--            <form action="" name="address_form">-->
+            <?php $form = \yii\widgets\ActiveForm::begin()?>
+            <ul>
+                <li id="name">
+                    <label for=""><span>*</span>收 货 人：</label>
+                    <input type="text" name="Address[name]" class="txt" value="<?=$model->name?>" />
+                    <p style="padding-left: 65px;color: red"></p>
+                </li>
+                <li>
+                    <label for=""><span>*</span>所在地区：</label>
+                    <select name="Address[province]" id="province">
+                        <option value="">=请选择省=</option>
+                    </select>
 
-                        <select name="Address[city]" id="city">
-                            <option value="">==请选择市==</option>
-                        </select>
+                    <select name="Address[city]" id="city">
+                        <option value="">=请选择城市=</option>
+                    </select>
 
-                        <select name="Address[area]" id="area">
-                            <option value="">==请选择区县==</option>
-                        </select>
-                        <p></p>
-                    </li>
-                    <li id="addressdetail">
-                        <label for=""><span>*</span>详细地址：</label>
-                        <input type="text" name="Address[detail]" class="txt address" value="<?=$model->detail?>" />
-                        <p></p>
-                    </li>
-                    <li id="tel">
-                        <label for=""><span>*</span>手机号码：</label>
-                        <input type="text" name="Address[tel]" class="txt" value="<?=$model->tel?>" />
-                        <p></p>
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="checkbox" name="Address['status']" class="check" value="1" />设为默认地址
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="button" name="" class="btn" value="保存" />
-                    </li>
-                </ul>
-            <?php \yii\widgets\ActiveForm::end() ?>
+                    <select name="Address[area]" id="area">
+                        <option value="">=请选择区/县=</option>
+                    </select>
+                </li>
+                <li id="address">
+                    <label for=""><span>*</span>详细地址：</label>
+                    <input type="text" name="Address[detail]" class="txt address" value="<?=$model->detail?>" />
+                    <p style="padding-left: 65px;color: red"></p>
+                </li>
+                <li id="tel">
+                    <label for=""><span>*</span>手机号码：</label>
+                    <input type="text" name="Address[tel]" class="txt" value="<?=$model->tel?>"/>
+                    <p style="padding-left: 65px;color: red"></p>
+                </li>
+                <li>
+                    <label for="">&nbsp;</label>
+                    <input type="checkbox" name="Address[status]" class="check" />设为默认地址
+                </li>
+                <li>
+                    <label for="">&nbsp;</label>
+                    <input type="submit" class="btn" value="保存"/>
+                </li>
+            </ul>
+            <?php \yii\widgets\ActiveForm::end()?>
         </div>
 
     </div>
@@ -614,44 +617,57 @@
         © 2005-2013 京东网上商城 版权所有，并保留所有权利。  ICP备案证书号:京ICP证070359号
     </p>
     <p class="auth">
-        <a href=""><img src="/images/xin.png" alt="" /></a>
-        <a href=""><img src="/images/kexin.jpg" alt="" /></a>
-        <a href=""><img src="/images/police.jpg" alt="" /></a>
-        <a href=""><img src="/images/beian.gif" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/xin.png" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/kexin.jpg" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/police.jpg" alt="" /></a>
+        <a href=""><img src="<?=\Yii::getAlias('@web')?>/images/beian.gif" alt="" /></a>
     </p>
 </div>
+<script type="text/javascript" src="<?=\Yii::getAlias('@web')?>/js/jquery-1.8.3.min.js"></script>
 <!-- 底部版权 end -->
-
 <script type="text/javascript">
-    //加载省数据
-    $.each(address,function(){
-        $("#province").append('<option>'+this.name+'</option>');
+    //页面加载完成就获取省份列表
+    //1 .将省数据加载到省选择框
+    $.each(address,function(i,v){
+        //console.log(v);
+        //v.name//省名称
+        $("#province").append('<option>'+v.name+'</option>');
     });
-    //选中省
-    $("#province").change(function () {
+    //2 根据选择的省，获取对应的城市数据，然后显示到城市列表
+    $("#province").change(function(){
+        //获取当前选中的省
         var current_province = $(this).val();
-        $.each(address,function () {
-            if(current_province == this.name){
-                var html = '<option value="">=请选择城市=</option>';
-                $.each(this.city,function () {
-                    html += '<option>'+this.name+'</option>';
-                })
+        //var current_province = $("#province").val();
+        //console.log(current_province);
+        $.each(address,function(i,v){
+            //遍历到当前选中的省
+            if(v.name == current_province){
+                //遍历当前省的城市
+                var html='<option value="">=请选择城市=</option>';
+                $.each(v.city,function(j,k){
+                    // k.name
+                    //$("#city").append('<option>'+k.name+'</option>');
+                    html += '<option>'+k.name+'</option>';
+                });
+                //更新到城市列表
                 $("#city").html(html);
-                $("#area").html('<option value="">=请选择区/县=</option>');
             }
         });
+        //清除区县数据
+        $("#area").html('<option value="">=请选择区县=</option>');
     });
-    //选中城市
-    $("#city").change(function () {
+
+    //3  根据选择的城市，获取对应的区县数据，然后显示到区县列表
+    $("#city").change(function(i,v){
         var current_province = $("#province").val();
-        var current_city = $("#city").val();
-        $.each(address,function () {
-            if(current_province == this.name){
-                $.each(this.city,function () {
-                    if(current_city == this.name){
-                        var html = '<option value="">=请选择区/县=</option>';
-                        $.each(this.area,function () {
-                            html += '<option>'+this+'</option>';
+        var current_city = $(this).val();
+        $.each(address,function(i,v){
+            if(v.name == current_province){
+                $.each(v.city,function(j,k){
+                    if(k.name == current_city){
+                        var html='<option value="">=请选择区县=</option>';
+                        $.each(k.area,function(m,n){
+                            html += '<option>'+n+'</option>';
                         });
                         $("#area").html(html);
                     }
@@ -659,41 +675,23 @@
             }
         });
     });
+   $('#province').val('<?= $model->province?>');
+    $('#province').change();
+    $('#city').val('<?= $model->city?>');
+    $('#city').change();
+    $('#area').val('<?= $model->area?>');
 
-
-    $(".btn").click(function () {
-        $.post('/member/edit?id='+<?=$model->id?>,$('#address_form').serialize(),function (data) {
-            console.debug(data);
-            //转换为对象
-            var json=JSON.parse(data);
-            if(json.status){
-                //修改成功跳转
-                alert('修改成功')
-                window.location='index'
-            }else {
-                $.each(json,function (i,v) {
-                    //再次遍历错误信息
-                    $.each(v,function (name,msg) {
-                        $('#'+name+' p').text(msg);
-                    })
-                })
-            }
-
-        })
-
-
-
-
-
-
-    })
-
-
-
+    <?php
+    if($model->getErrors()) {
+        foreach ($model->errors as $name => $error) {
+            echo '$("#' . $name . ' p").text("' . implode(',', $error) . '");';
+        }
+    }
+    ?>
 
 
 
 </script>
-
 </body>
 </html>
+
