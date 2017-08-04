@@ -25,7 +25,7 @@ class MemberController extends \yii\web\Controller
             //添加时间
 //            $this->created_at = time();
 //            $this->auth_key = \Yii::$app->security->generateRandomString();
-            $model->save();
+            $model->save(false);
             \yii::$app->session->setFlash('success','注册成功');
             return $this->redirect(['member/login']);
         }
@@ -33,10 +33,6 @@ class MemberController extends \yii\web\Controller
         return $this->render('register',['model'=>$model]);
     }
 
-public function actionIndex(){
-
-        return $this->render('index');
-}
 
     //登录开始
     public function actionLogin(){
@@ -149,7 +145,7 @@ public function actionIndex(){
         return $this->redirect('member/login');
     }
 
-    public function actionAbc(){
+    public function actionUser(){
         var_dump(\Yii::$app->user->isGuest);
     }
 

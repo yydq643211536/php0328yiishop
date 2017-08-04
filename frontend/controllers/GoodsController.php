@@ -20,6 +20,7 @@ use yii\web\NotFoundHttpException;
 class GoodsController extends Controller
 {
 
+    //x
     public $enableCsrfValidation = false;
     public $layout = false;
 
