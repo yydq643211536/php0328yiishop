@@ -78,12 +78,11 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     //在save之前处理数据
     public function beforeSave($insert)
     {
-        if($insert) {
-            $this->status = 1;
+        if($insert){
+            $this->status=1;
             //添加时间
-            $this->created_at = time();
+            $this->created_at=time();
             $this->auth_key = \Yii::$app->security->generateRandomString();
-//        }}
         }
         //验证通过
         if($this->password){//加密密码

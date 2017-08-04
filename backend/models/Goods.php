@@ -6,6 +6,7 @@ use backend\models\Brand;
 use backend\models\GoodsCategory;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -111,5 +112,31 @@ class Goods extends \yii\db\ActiveRecord
         return ArrayHelper::map(Brand::find()->all(),'id','name');
     }
 
+    /*
+     * 商品和相册关系 1对多
+     */
+    public function getGalleries()
+    {
+        return $this->hasMany(GoodsGallery::className(),['goods_id'=>'id']);
+    }
+
+
+    //获取图片轮播数据
+    public function getPics()
+    {
+        $images = [];
+        foreach ($this->galleries as $img){
+            $images[] = Html::img($img->path);
+        }
+        return $images;
+    }
+
+    /*
+     * 获取商品详情
+     */
+    public function getGoodsIntro()
+    {
+        return $this->hasOne(GoodsIntro::className(),['goods_id'=>'id']);
+    }
 
 }

@@ -9,6 +9,7 @@ use backend\models\Goods;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsIntro;
 use yii\data\Pagination;
+use yii\web\NotFoundHttpException;
 use yii\web\Request;
 
 
@@ -28,7 +29,7 @@ class GoodsController extends \yii\web\Controller
         //获取总数量
         $total=$query->count();
         //每页显示多少条
-        $page_size=2;
+        $page_size=5;
         $pager=new Pagination([
             'totalCount'=>$total,
             'defaultPageSize'=>$page_size,
@@ -69,7 +70,7 @@ class GoodsController extends \yii\web\Controller
             $goodsintro->goods_id=$model->id;
             $goodsintro->save();//保存商品详细信息
             \yii::$app->session->setFlash('success','添加成功');
-            return $this->redirect(['index']);
+            return $this->redirect(['goods/gallery','id'=>$model->id]);
         }
         $categorys=\backend\models\GoodsCategory::find()->select(['id','name','parent_id'])->asArray()->all();
         //调用视图显示添加页面
@@ -113,15 +114,26 @@ class GoodsController extends \yii\web\Controller
     }
 
     public function actionGallery($id){
-        $model=new GoodsGallery();
-        $goods=Goods::findOne($id);
-        $request=new Request();
-        if($request->post()){
-            $model->load($request->post());
-            var_dump($model);exit();
+        $goods=Goods::findOne(['id'=>$id]);
+        if($goods == null){
+            throw new NotFoundHttpException('商品不存在');
         }
         //调用视图显示页面
-        return $this->render('gallery',['model'=>$model,'goods'=>$goods]);
+        return $this->render('gallery',['goods'=>$goods]);
+    }
+
+    /*
+    * AJAX删除图片
+    */
+    public function actionDelGallery(){
+        $id = \Yii::$app->request->post('id');
+        $model = GoodsGallery::findOne(['id'=>$id]);
+        if($model && $model->delete()){
+            return 'success';
+        }else{
+            return 'fail';
+        }
+
     }
 
 
@@ -178,6 +190,17 @@ class GoodsController extends \yii\web\Controller
                 ],
             ],
         ];
+    }
+
+    //预览商品信息
+    public function actionView($id)
+    {
+        $model = Goods::findOne(['id'=>$id]);
+        if($model==null){
+            throw new NotFoundHttpException('商品不存在');
+        }
+        return $this->render('view',['model'=>$model]);
+
     }
 
 
