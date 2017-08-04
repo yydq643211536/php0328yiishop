@@ -25,7 +25,7 @@ class MemberController extends \yii\web\Controller
             //添加时间
 //            $this->created_at = time();
 //            $this->auth_key = \Yii::$app->security->generateRandomString();
-            $model->save(false);
+            $model->save();
             \yii::$app->session->setFlash('success','注册成功');
             return $this->redirect(['member/login']);
         }
